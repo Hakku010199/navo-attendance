@@ -19,15 +19,23 @@ export const studentService = {
     return data
   },
 
-  async getByDivision(divisionId) {
-    const { data, error } = await supabase
-      .from('students')
-      .select('id, roll_number, name, mobile')
-      .eq('division_id', divisionId)
-      .order('roll_number')
-    if (error) throw error
-    return data
-  },
+async getByDivision(divisionId) {
+  const { data, error } = await supabase
+    .from('students')
+    .select('id, roll_number, name, mobile')
+    .eq('division_id', divisionId)
+    .order('roll_number')  // Remove this or keep it for a secondary sort
+  if (error) throw error
+  
+  // Sort numerically by roll_number
+  return data.sort((a, b) => {
+    const numA = parseInt(a.roll_number) || 0
+    const numB = parseInt(b.roll_number) || 0
+    if (numA !== numB) return numA - numB
+    // Fallback to alphabetical if both are non-numeric
+    return a.roll_number.localeCompare(b.roll_number)
+  })
+},
 
   async create({ roll_number, name, mobile, division_id }) {
     const { data, error } = await supabase
