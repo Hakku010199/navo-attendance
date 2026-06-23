@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#1e1f24] text-gray-100 font-sans antialiased;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-[#1e1f24];
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[#3a3b42] rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#4a4b52];
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[#1e1f24] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-[#2e3038] hover:bg-[#3a3b42] text-gray-200 font-medium px-4 py-2 rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#3a3b42] focus:ring-offset-2 focus:ring-offset-[#1e1f24];
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-500 text-white font-medium px-4 py-2 rounded-lg transition-all duration-150;
+  }
+
+  .card {
+    @apply bg-[#26272d] border border-[#3a3b42] rounded-xl;
+  }
+
+  .input {
+    @apply bg-[#1e1f24] border border-[#3a3b42] text-gray-100 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder-gray-500 transition-all duration-150;
+  }
+
+  .badge-present {
+    @apply bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  .badge-absent {
+    @apply bg-red-500/20 text-red-400 border border-red-500/30 text-xs font-medium px-2.5 py-0.5 rounded-full;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-gray-400 hover:text-gray-100 hover:bg-[#2e3038] transition-all duration-150 font-medium text-sm cursor-pointer;
+  }
+
+  .nav-item.active {
+    @apply bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 hover:text-indigo-300;
+  }
+}
