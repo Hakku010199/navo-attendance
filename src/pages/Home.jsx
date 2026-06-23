@@ -177,13 +177,6 @@ export default function Home() {
         {/* Summary */}
         <AttendanceSummary total={students.length} present={present} absent={absent} />
 
-        {/* Grid header */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-gray-300 font-medium text-sm">
-            {selectedDivision ? `${divisionName} — ${students.length} students` : 'Select a division'}
-          </h2>
-        </div>
-
         {/* Grid */}
         {loadingStudents ? (
           <div className="card p-10 flex items-center justify-center">
