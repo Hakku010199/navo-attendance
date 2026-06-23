@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 export default function AttendanceGrid({ students, attendance, onToggle }) {
   const [pressedStudent, setPressedStudent] = useState(null)
+  const timeoutRef = useRef({})
 
   if (students.length === 0) {
     return (
@@ -12,19 +13,17 @@ export default function AttendanceGrid({ students, attendance, onToggle }) {
     )
   }
 
-  const handleMouseDown = (studentId, timeout) => {
+  const handleMouseDown = (studentId) => {
     const timer = setTimeout(() => {
       setPressedStudent(studentId)
     }, 200)
-    timeout[studentId] = timer
+    timeoutRef.current[studentId] = timer
   }
 
-  const handleMouseUp = (studentId, timeout) => {
-    clearTimeout(timeout[studentId])
+  const handleMouseUp = (studentId) => {
+    clearTimeout(timeoutRef.current[studentId])
     setPressedStudent(null)
   }
-
-  const timeout = {}
 
   return (
     <div className="card p-5">
@@ -44,11 +43,11 @@ export default function AttendanceGrid({ students, attendance, onToggle }) {
               )}
 
               <button
-                onMouseDown={() => handleMouseDown(student.id, timeout)}
-                onMouseUp={() => handleMouseUp(student.id, timeout)}
-                onMouseLeave={() => handleMouseUp(student.id, timeout)}
-                onTouchStart={() => handleMouseDown(student.id, timeout)}
-                onTouchEnd={() => handleMouseUp(student.id, timeout)}
+                onMouseDown={() => handleMouseDown(student.id)}
+                onMouseUp={() => handleMouseUp(student.id)}
+                onMouseLeave={() => handleMouseUp(student.id)}
+                onTouchStart={() => handleMouseDown(student.id)}
+                onTouchEnd={() => handleMouseUp(student.id)}
                 onClick={() => onToggle(student.id)}
                 title={`${student.name} - ${student.roll_number}`}
                 className={`
