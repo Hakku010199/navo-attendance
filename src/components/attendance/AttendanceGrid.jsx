@@ -67,19 +67,6 @@ export default function AttendanceGrid({ students, attendance, onToggle }) {
           )
         })}
       </div>
-
-      {/* Legend */}
-      <div className="flex items-center gap-5 mt-4 pt-4 border-t border-[#3a3b42]">
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <div className="w-3 h-3 rounded bg-green-500/30 border border-green-500/40" />
-          Present
-        </div>
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <div className="w-3 h-3 rounded bg-red-500/30 border border-red-500/40" />
-          Absent
-        </div>
-        <p className="text-xs text-gray-600 ml-auto">Click to toggle • Long press for name</p>
-      </div>
     </div>
   )
 }
