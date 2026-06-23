@@ -199,34 +199,37 @@ export default function Home() {
 
         {/* Action buttons */}
         {students.length > 0 && (
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => markAll('present')}
-              className="flex items-center gap-2 text-sm px-4 py-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20 transition-all font-medium"
-            >
-               Mark All Present
-            </button>
-            <button
-              onClick={() => markAll('absent')}
-              className="flex items-center gap-2 text-sm px-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 transition-all font-medium"
-            > Mark All Absent
-            </button>
-            <button
-              onClick={reset}
-              className="flex items-center gap-2 text-sm btn-secondary"
-            >
-             Reset
-            </button>
-            <div className="flex-1 flex justify-end">
+          <div className="flex flex-col gap-3">
+            {/* Quick Action Buttons Row */}
+            <div className="grid grid-cols-3 gap-3">
               <button
-                onClick={submitAttendance}
-                disabled={submitting || students.length === 0}
-                className="btn-primary flex items-center gap-2 text-sm shadow-lg shadow-indigo-500/20"
+                onClick={() => markAll('present')}
+                className="flex items-center justify-center text-sm px-4 py-2.5 rounded-lg bg-gray-500/10 text-gray-300 hover:bg-gray-500/20 border border-gray-500/20 transition-all font-medium h-full"
               >
-            
-                {submitting ? 'Submitting...' : 'Submit Attendance'}
+                Mark All Present
+              </button>
+              <button
+                onClick={() => markAll('absent')}
+                className="flex items-center justify-center text-sm px-4 py-2.5 rounded-lg bg-gray-500/10 text-gray-300 hover:bg-gray-500/20 border border-gray-500/20 transition-all font-medium h-full"
+              >
+                Mark All Absent
+              </button>
+              <button
+                onClick={reset}
+                className="flex items-center justify-center text-sm px-4 py-2.5 rounded-lg bg-gray-500/10 text-gray-300 hover:bg-gray-500/20 border border-gray-500/20 transition-all font-medium h-full"
+              >
+                Reset
               </button>
             </div>
+
+            {/* Submit Attendance Button */}
+            <button
+              onClick={submitAttendance}
+              disabled={submitting || students.length === 0}
+              className="w-full flex items-center justify-center text-sm px-4 py-3 rounded-lg bg-gray-500/10 text-gray-300 hover:bg-gray-500/20 border border-gray-500/20 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {submitting ? 'Submitting...' : 'Submit Attendance'}
+            </button>
           </div>
         )}
       </main>

@@ -1,6 +1,8 @@
-import { MdCheckCircle, MdCancel } from 'react-icons/md'
+import { useState } from 'react'
 
 export default function AttendanceGrid({ students, attendance, onToggle }) {
+  const [pressedStudent, setPressedStudent] = useState(null)
+
   if (students.length === 0) {
     return (
       <div className="card p-10 text-center">
@@ -10,35 +12,58 @@ export default function AttendanceGrid({ students, attendance, onToggle }) {
     )
   }
 
+  const handleMouseDown = (studentId, timeout) => {
+    const timer = setTimeout(() => {
+      setPressedStudent(studentId)
+    }, 200)
+    timeout[studentId] = timer
+  }
+
+  const handleMouseUp = (studentId, timeout) => {
+    clearTimeout(timeout[studentId])
+    setPressedStudent(null)
+  }
+
+  const timeout = {}
+
   return (
     <div className="card p-5">
       <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-10 gap-2.5">
         {students.map(student => {
           const isPresent = attendance[student.id] !== 'absent'
           return (
-            <button
-              key={student.id}
-              onClick={() => onToggle(student.id)}
-              title={`${student.name}`}
-              className={`
-                relative group flex flex-col items-center justify-center
-                w-full aspect-square rounded-xl font-mono font-bold text-base
-                transition-all duration-150 active:scale-95 focus:outline-none
-                focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#26272d]
-                ${isPresent
-                  ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30 focus:ring-green-500'
-                  : 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 focus:ring-red-500'
-                }
-              `}
-            >
-              <span className="leading-none">{student.roll_number}</span>
-              <span className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                {isPresent
-                  ? <MdCheckCircle size={10} className="text-green-400" />
-                  : <MdCancel size={10} className="text-red-400" />
-                }
-              </span>
-            </button>
+            <div key={student.id} className="relative">
+              {/* Tooltip */}
+              {pressedStudent === student.id && (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-10 whitespace-nowrap">
+                  <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg border border-gray-700">
+                    {student.name}
+                  </div>
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                </div>
+              )}
+
+              <button
+                onMouseDown={() => handleMouseDown(student.id, timeout)}
+                onMouseUp={() => handleMouseUp(student.id, timeout)}
+                onMouseLeave={() => handleMouseUp(student.id, timeout)}
+                onTouchStart={() => handleMouseDown(student.id, timeout)}
+                onTouchEnd={() => handleMouseUp(student.id, timeout)}
+                onClick={() => onToggle(student.id)}
+                title={`${student.name} - ${student.roll_number}`}
+                className={`
+                  relative flex flex-col items-center justify-center
+                  w-full aspect-square rounded-xl font-mono font-bold text-base
+                  transition-colors duration-150 focus:outline-none
+                  ${isPresent
+                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30'
+                    : 'bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30'
+                  }
+                `}
+              >
+                <span className="leading-none">{student.roll_number}</span>
+              </button>
+            </div>
           )
         })}
       </div>
@@ -53,7 +78,7 @@ export default function AttendanceGrid({ students, attendance, onToggle }) {
           <div className="w-3 h-3 rounded bg-red-500/30 border border-red-500/40" />
           Absent
         </div>
-        <p className="text-xs text-gray-600 ml-auto">Click to toggle</p>
+        <p className="text-xs text-gray-600 ml-auto">Click to toggle • Long press for name</p>
       </div>
     </div>
   )
