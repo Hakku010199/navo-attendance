@@ -1,5 +1,16 @@
 import { supabase } from '../lib/supabase'
 
+// Helper function to sort records numerically by student roll_number
+const sortByRollNumber = (records) => {
+  return records.sort((a, b) => {
+    const numA = parseInt(a.students?.roll_number) || 0
+    const numB = parseInt(b.students?.roll_number) || 0
+    if (numA !== numB) return numA - numB
+    // Fallback to alphabetical if both are non-numeric
+    return (a.students?.roll_number || '').localeCompare(b.students?.roll_number || '')
+  })
+}
+
 export const attendanceService = {
   async submitAttendance({ date, divisionId, records }) {
     // Create session
@@ -52,7 +63,9 @@ export const attendanceService = {
 
     const { data, error } = await query
     if (error) throw error
-    return data
+    
+    // Sort numerically by student roll_number
+    return sortByRollNumber(data)
   },
 
   async getHistory({ date, divisionId, search }) {
@@ -76,12 +89,30 @@ export const attendanceService = {
     if (error) throw error
 
     // Filter by student name search
+    let filtered = data
     if (search) {
-      return data.filter(r =>
+      filtered = data.filter(r =>
         r.students?.name?.toLowerCase().includes(search.toLowerCase()) ||
         r.students?.roll_number?.toLowerCase().includes(search.toLowerCase())
       )
     }
-    return data
+    
+    // Group by date and sort by roll number within each date
+    const grouped = {}
+    filtered.forEach(record => {
+      const date = record.attendance_sessions?.attendance_date
+      if (!grouped[date]) {
+        grouped[date] = []
+      }
+      grouped[date].push(record)
+    })
+    
+    // Sort each date group by roll number
+    Object.keys(grouped).forEach(date => {
+      grouped[date] = sortByRollNumber(grouped[date])
+    })
+    
+    // Flatten back to array
+    return Object.values(grouped).flat()
   },
 }

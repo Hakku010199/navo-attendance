@@ -96,35 +96,28 @@ export default function DailyAttendanceSection() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#3a3b42]">
-              {records
-                .slice()
-                .sort((a, b) => {
-                  const ra = parseInt(a.students?.roll_number) || 0
-                  const rb = parseInt(b.students?.roll_number) || 0
-                  return ra - rb
-                })
-                .map(r => (
-                  <tr key={r.id} className="hover:bg-[#2e3038]/50 transition-colors">
-                    <td className="px-5 py-3.5 font-mono text-sm text-gray-300">{r.students?.roll_number}</td>
-                    <td className="px-5 py-3.5 text-gray-100 font-medium">{r.students?.name}</td>
-                    <td className="px-5 py-3.5">
-                      <span className={r.status === 'present' ? 'badge-present' : 'badge-absent'}>
-                        {r.status === 'present' ? 'Present' : 'Absent'}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-1.5 text-gray-300 text-sm">
-                        {r.students?.mobile}
-                        <button
-                          onClick={() => window.location.href = `tel:${r.students?.mobile}`}
-                          className="text-indigo-400 hover:text-indigo-300 transition-colors"
-                        >
-                          <MdPhone size={15} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+              {records.map(r => (
+                <tr key={r.id} className="hover:bg-[#2e3038]/50 transition-colors">
+                  <td className="px-5 py-3.5 font-mono text-sm text-gray-300">{r.students?.roll_number}</td>
+                  <td className="px-5 py-3.5 text-gray-100 font-medium">{r.students?.name}</td>
+                  <td className="px-5 py-3.5">
+                    <span className={r.status === 'present' ? 'badge-present' : 'badge-absent'}>
+                      {r.status === 'present' ? 'Present' : 'Absent'}
+                    </span>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-1.5 text-gray-300 text-sm">
+                      {r.students?.mobile}
+                      <button
+                        onClick={() => window.location.href = `tel:${r.students?.mobile}`}
+                        className="text-indigo-400 hover:text-indigo-300 transition-colors"
+                      >
+                        <MdPhone size={15} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

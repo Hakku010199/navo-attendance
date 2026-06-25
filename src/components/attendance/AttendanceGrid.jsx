@@ -2,7 +2,9 @@ import { useState, useRef } from 'react'
 
 export default function AttendanceGrid({ students, attendance, onToggle }) {
   const [pressedStudent, setPressedStudent] = useState(null)
+  const [visibleTooltip, setVisibleTooltip] = useState(null)
   const timeoutRef = useRef({})
+  const hideTimeoutRef = useRef({})
 
   if (students.length === 0) {
     return (
@@ -14,15 +16,28 @@ export default function AttendanceGrid({ students, attendance, onToggle }) {
   }
 
   const handleMouseDown = (studentId) => {
+    // Clear any pending hide timeout
+    if (hideTimeoutRef.current[studentId]) {
+      clearTimeout(hideTimeoutRef.current[studentId])
+      delete hideTimeoutRef.current[studentId]
+    }
+    
     const timer = setTimeout(() => {
       setPressedStudent(studentId)
+      setVisibleTooltip(studentId)
     }, 200)
     timeoutRef.current[studentId] = timer
   }
 
   const handleMouseUp = (studentId) => {
     clearTimeout(timeoutRef.current[studentId])
-    setPressedStudent(null)
+    
+    // Delay hiding the tooltip by 300ms to allow reading
+    hideTimeoutRef.current[studentId] = setTimeout(() => {
+      setVisibleTooltip(null)
+      setPressedStudent(null)
+      delete hideTimeoutRef.current[studentId]
+    }, 300)
   }
 
   return (
@@ -32,10 +47,10 @@ export default function AttendanceGrid({ students, attendance, onToggle }) {
           const isPresent = attendance[student.id] !== 'absent'
           return (
             <div key={student.id} className="relative">
-              {/* Tooltip */}
-              {pressedStudent === student.id && (
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-10 whitespace-nowrap">
-                  <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg border border-gray-700">
+              {/* Tooltip - stays visible while holding and delays hiding */}
+              {visibleTooltip === student.id && (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 z-10 whitespace-nowrap pointer-events-none transition-opacity duration-200">
+                  <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg shadow-lg border border-gray-700">
                     {student.name}
                   </div>
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
